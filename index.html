@@ -64,6 +64,14 @@
   #sound:hover { transform:translateX(-50%) scale(1.08); }
   #sound.off { opacity:.55; }
   .hint { position:fixed; left:50%; bottom:6px; transform:translateX(-50%); font-size:11.5px; color:rgba(200,225,255,.55); }
+
+  /* 她 */
+  #her { position:absolute; width:12.5%; transform-origin:50% 100%; pointer-events:none; z-index:6; transition:left 1.1s ease, top 1.1s ease, transform .25s; }
+  #her img { width:100%; display:block; filter:drop-shadow(0 8px 14px rgba(20,50,90,.22)); }
+  #her .shadow { position:absolute; left:50%; bottom:-4%; width:70%; height:12%; transform:translateX(-50%); background:radial-gradient(ellipse, rgba(20,50,90,.28), rgba(20,50,90,0) 70%); border-radius:50%; }
+  #her.walking img { animation:bob .55s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-2.2%);} }
+  #herTag { position:absolute; left:50%; top:-13%; transform:translateX(-50%); font-size:11px; padding:2px 8px; border-radius:999px; background:rgba(255,255,255,.9); border:1px solid var(--line); color:var(--ink-soft); white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -72,6 +80,12 @@
     <div id="tint" class="afternoon"></div>
     <div id="bubbles"></div>
     <div id="swimmer">🐋</div>
+
+    <div id="her" style="left:46%; top:72%">
+      <div id="herTag">小鲸</div>
+      <img id="herImg" alt="小鲸" />
+      <div class="shadow"></div>
+    </div>
 
     <div id="clockCard">
       <div id="time">--:--</div>
@@ -163,6 +177,8 @@
     b.addEventListener('click', () => {
       manualMode = (manualMode === b.dataset.mode) ? null : b.dataset.mode;
       tick();
+      clearTimeout(window.__modeTimer);
+      if (manualMode) window.__modeTimer = setTimeout(() => { manualMode = null; tick(); }, 20000);
     });
   });
 
@@ -185,6 +201,73 @@
   }
   weather();
 
+
+  // ── 她的立绘：白底抠掉 ──
+  const herImg = $('#herImg');
+  const herEl = $('#her');
+  (function keyOutWhite() {
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload = function () {
+      const c = document.createElement('canvas');
+      c.width = im.width; c.height = im.height;
+      const g = c.getContext('2d');
+      g.drawImage(im, 0, 0);
+      const data = g.getImageData(0, 0, c.width, c.height);
+      const px = data.data;
+      for (let i = 0; i < px.length; i += 4) {
+        const r = px[i], gg = px[i+1], b = px[i+2];
+        const near = Math.min(r, gg, b);
+        if (near > 242) px[i+3] = 0;
+        else if (near > 226) px[i+3] = Math.round(px[i+3] * (242 - near) / 16);
+      }
+      g.putImageData(data, 0, 0);
+      herImg.src = c.toDataURL('image/png');
+    };
+    im.src = 'assets/avatar.jpg';
+  })();
+
+  // ── 她在房间里走动 ──
+  const FLOOR = { x0: 30, x1: 76, y0: 66, y1: 86 };
+  let herPos = { x: 46, y: 72 };
+  let walkTimer = null;
+
+  function placeHer(x, y) {
+    herPos = { x, y };
+    const depth = (y - FLOOR.y0) / (FLOOR.y1 - FLOOR.y0); // 0 远 1 近
+    const scale = 0.78 + depth * 0.42;
+    herEl.style.left = x + '%';
+    herEl.style.top = y + '%';
+    herEl.style.transform = 'translate(-50%,-100%) scale(' + scale.toFixed(3) + ')';
+    herEl.style.zIndex = String(5 + Math.round(depth * 3));
+  }
+
+  function walkTo(x, y, speed) {
+    const dx = x - herPos.x, dy = (y - herPos.y) * 1.6;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const dur = Math.max(0.8, Math.min(4.2, dist / (speed || 9)));
+    herEl.classList.add('walking');
+    herEl.style.transition = 'left ' + dur + 's ease-in-out, top ' + dur + 's ease-in-out, transform .25s';
+    placeHer(x, y);
+    clearTimeout(walkTimer);
+    walkTimer = setTimeout(() => herEl.classList.remove('walking'), dur * 1000);
+    return dur;
+  }
+
+  function wander() {
+    const x = FLOOR.x0 + Math.random() * (FLOOR.x1 - FLOOR.x0);
+    const y = FLOOR.y0 + Math.random() * (FLOOR.y1 - FLOOR.y0);
+    walkTo(x, y, 9);
+    setTimeout(wander, 6000 + Math.random() * 8000);
+  }
+
+  // 点击热点：先走过去，再打开
+  const HOTSPOT_SPOT = {
+    bed:    { x: 34, y: 70 }, shelf: { x: 45, y: 66 }, lamp: { x: 24, y: 72 },
+    desk:   { x: 68, y: 70 }, window:{ x: 62, y: 64 }, whale: { x: 52, y: 80 },
+    frames: { x: 30, y: 64 }
+  };
+
   const CARDS = {
     bed:    { t: '床', p: '被子是蓝白格子的，早上会被太阳晒到一角。\n她说这是房间里最像海的地方——躺进去就有浪。' },
     shelf:  { t: '书架', p: '书按颜色排，不是按名字。\n最上面那层空着一格，留给以后想看的书。' },
@@ -200,7 +283,16 @@
     $('#panelText').textContent = c.p;
     $('#panel').classList.add('show');
   }
-  document.querySelectorAll('.hotspot').forEach((el) => el.addEventListener('click', () => showPanel(el.dataset.key)));
+  document.querySelectorAll('.hotspot').forEach((el) => el.addEventListener('click', () => {
+    const key = el.dataset.key;
+    const spot = HOTSPOT_SPOT[key];
+    if (spot) {
+      const dur = walkTo(spot.x, spot.y, 14);
+      setTimeout(() => showPanel(key), Math.min(1200, dur * 1000 * 0.85));
+    } else {
+      showPanel(key);
+    }
+  }));
   $('#panel .close').addEventListener('click', () => $('#panel').classList.remove('show'));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('#panel').classList.remove('show'); });
 
@@ -280,6 +372,9 @@
     else stopAudio();
   });
   $('#sound').classList.add('off');
+
+  placeHer(herPos.x, herPos.y);
+  setTimeout(wander, 2500);
 })();
 </script>
 </body>
