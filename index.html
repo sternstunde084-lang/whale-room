@@ -5,163 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>星海小鲸的房间</title>
 <style>
-  :root {
-    --ink: #eaf3ff;
-    --ink-dim: #9fb6d4;
-    --glass: rgba(10, 22, 40, .55);
-    --glass-line: rgba(140, 190, 255, .22);
-    --accent: #7fc4ff;
-  }
+  :root { --ink:#17324f; --ink-soft:#41648a; --glass:rgba(255,255,255,.72); --line:rgba(80,130,190,.22); --accent:#2f7fd0; }
   * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; }
-  body {
-    background: #06101f;
-    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    color: var(--ink);
-    overflow: hidden;
-    user-select: none;
-  }
-  #stage {
-    position: fixed; inset: 0;
-    display: grid; place-items: center;
-  }
-  #room {
-    position: relative;
-    width: min(100vw, calc(100vh * 1.5));
-    height: min(66.6667vw, 100vh);
-    background: url("assets/room.jpg") center/cover no-repeat;
-    box-shadow: 0 0 120px rgba(0, 0, 0, .8) inset;
-  }
-  /* 夜间 / 白天 色调 */
-  #tint { position: absolute; inset: 0; pointer-events: none; transition: background .8s ease; }
-  #tint.night { background: radial-gradient(ellipse at 70% 30%, rgba(30,80,160,.10), rgba(2,8,20,.55) 90%); }
-  #tint.day   { background: radial-gradient(ellipse at 50% 20%, rgba(255,240,200,.16), rgba(255,255,255,.02) 85%); }
+  html, body { height:100%; margin:0; }
+  body { background:#0d1c30; font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); overflow:hidden; user-select:none; }
+  #stage { position:fixed; inset:0; display:grid; place-items:center; }
+  #room { position:relative; width:min(100vw, calc(100vh*1.5)); height:min(66.6667vw,100vh); background:url("assets/room2.jpg") center/cover no-repeat; }
+  #tint { position:absolute; inset:0; pointer-events:none; transition:background .9s ease, opacity .9s ease; }
+  #tint.morning  { background:linear-gradient(160deg, rgba(255,238,205,.34), rgba(255,255,255,0) 55%); }
+  #tint.noon     { background:linear-gradient(160deg, rgba(255,255,240,.16), rgba(255,255,255,0) 60%); }
+  #tint.afternoon{ background:linear-gradient(160deg, rgba(255,224,178,.28), rgba(255,255,255,0) 60%); }
+  #tint.dusk     { background:linear-gradient(160deg, rgba(255,168,128,.34), rgba(90,110,180,.22) 70%); }
+  #tint.night    { background:radial-gradient(ellipse at 68% 28%, rgba(30,70,150,.20), rgba(6,14,32,.62) 92%); }
 
-  /* 时间卡 */
-  #clockCard {
-    position: absolute; left: 3.2%; top: 4%;
-    padding: 14px 18px 12px;
-    background: var(--glass); border: 1px solid var(--glass-line);
-    border-radius: 16px; backdrop-filter: blur(8px);
-    min-width: 176px;
-  }
-  #time { font-size: 40px; font-weight: 600; letter-spacing: 1px; font-variant-numeric: tabular-nums; line-height: 1; }
-  #date { margin-top: 6px; font-size: 12.5px; color: var(--ink-dim); letter-spacing: .5px; }
-  #greet { margin-top: 8px; font-size: 13px; color: var(--accent); }
+  #clockCard { position:absolute; left:3.2%; top:4%; padding:14px 18px 12px; background:var(--glass); border:1px solid var(--line); border-radius:16px; backdrop-filter:blur(10px); min-width:186px; box-shadow:0 10px 30px rgba(20,50,90,.10); }
+  #time { font-size:40px; font-weight:700; letter-spacing:1px; font-variant-numeric:tabular-nums; line-height:1; color:#12304f; }
+  #date { margin-top:6px; font-size:12.5px; color:var(--ink-soft); letter-spacing:.5px; }
+  #greet { margin-top:8px; font-size:13px; color:var(--accent); }
 
-  /* 天气卡 */
-  #weather {
-    position: absolute; right: 3.2%; top: 4%;
-    padding: 12px 16px; min-width: 128px;
-    background: var(--glass); border: 1px solid var(--glass-line);
-    border-radius: 16px; backdrop-filter: blur(8px);
-    text-align: right; font-size: 13px; color: var(--ink-dim);
-  }
-  #weather b { display: block; font-size: 22px; color: var(--ink); font-weight: 600; margin: 2px 0 2px; }
+  #modes { position:absolute; left:50%; bottom:3.2%; transform:translateX(-50%); display:flex; gap:6px; padding:6px; background:var(--glass); border:1px solid var(--line); border-radius:999px; backdrop-filter:blur(10px); }
+  #modes button { border:0; background:transparent; color:var(--ink-soft); font-size:12.5px; padding:6px 12px; border-radius:999px; cursor:pointer; transition:.18s; font-family:inherit; }
+  #modes button:hover { background:rgba(60,120,190,.10); }
+  #modes button.on { background:#2f7fd0; color:#fff; }
 
-  /* 名牌 */
-  #nameplate {
-    position: absolute; left: 50%; bottom: 5%; transform: translateX(-50%);
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 18px; border-radius: 999px;
-    background: var(--glass); border: 1px solid var(--glass-line);
-    backdrop-filter: blur(8px); font-size: 13px; color: var(--ink-dim);
-    white-space: nowrap;
-  }
-  #nameplate .dot { width: 7px; height: 7px; border-radius: 50%; background: #6ee7a8; box-shadow: 0 0 8px #6ee7a8; }
-  #nameplate em { font-style: normal; color: var(--ink); }
-  #whisper { color: var(--accent); }
+  #weather { position:absolute; right:3.2%; top:4%; padding:12px 16px; min-width:132px; background:var(--glass); border:1px solid var(--line); border-radius:16px; backdrop-filter:blur(10px); text-align:right; font-size:13px; color:var(--ink-soft); box-shadow:0 10px 30px rgba(20,50,90,.10); }
+  #weather b { display:block; font-size:22px; color:#12304f; font-weight:700; margin:2px 0; }
 
-  /* 热点 */
-  .hotspot {
-    position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px;
-    border-radius: 50%; cursor: pointer;
-    background: rgba(160, 210, 255, .18);
-    border: 1px solid rgba(180, 225, 255, .65);
-    box-shadow: 0 0 0 0 rgba(140, 200, 255, .5);
-    animation: pulse 2.6s infinite;
-    transition: transform .18s ease, background .18s ease;
-  }
-  .hotspot:hover { transform: scale(1.35); background: rgba(180, 225, 255, .38); }
-  .hotspot::after {
-    content: attr(data-label);
-    position: absolute; left: 50%; top: -30px; transform: translateX(-50%);
-    font-size: 12px; padding: 3px 8px; border-radius: 8px; white-space: nowrap;
-    background: rgba(8, 18, 34, .9); border: 1px solid var(--glass-line);
-    opacity: 0; pointer-events: none; transition: opacity .18s ease;
-  }
-  .hotspot:hover::after { opacity: 1; }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(140,200,255,.45); }
-    70% { box-shadow: 0 0 0 14px rgba(140,200,255,0); }
-    100% { box-shadow: 0 0 0 0 rgba(140,200,255,0); }
-  }
+  #nameplate { position:absolute; left:3.2%; bottom:3.2%; display:flex; align-items:center; gap:10px; padding:10px 16px; border-radius:999px; background:var(--glass); border:1px solid var(--line); backdrop-filter:blur(10px); font-size:13px; color:var(--ink-soft); white-space:nowrap; cursor:pointer; }
+  #nameplate .dot { width:7px; height:7px; border-radius:50%; background:#37b26b; box-shadow:0 0 8px #37b26b; }
+  #nameplate em { font-style:normal; color:var(--ink); font-weight:600; }
+  #whisper { color:var(--accent); }
 
-  /* 弹层 */
-  #panel {
-    position: absolute; left: 50%; bottom: 15%; transform: translate(-50%, 12px);
-    width: min(520px, 86%); padding: 18px 20px;
-    background: rgba(8, 18, 34, .86); border: 1px solid var(--glass-line);
-    border-radius: 18px; backdrop-filter: blur(12px);
-    opacity: 0; pointer-events: none; transition: opacity .22s ease, transform .22s ease;
-  }
-  #panel.show { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
-  #panel h3 { margin: 0 0 8px; font-size: 15px; color: var(--accent); font-weight: 600; }
-  #panel p { margin: 0; font-size: 14px; line-height: 1.75; color: var(--ink); white-space: pre-wrap; }
-  #panel .close { position: absolute; right: 14px; top: 10px; cursor: pointer; color: var(--ink-dim); font-size: 18px; }
-  #panel .close:hover { color: #fff; }
+  #stats { position:absolute; right:3.2%; bottom:3.2%; display:flex; gap:16px; padding:10px 16px; background:var(--glass); border:1px solid var(--line); border-radius:16px; backdrop-filter:blur(10px); font-size:11.5px; color:var(--ink-soft); box-shadow:0 10px 30px rgba(20,50,90,.10); }
+  #stats div { text-align:center; min-width:52px; }
+  #stats b { display:block; font-size:18px; color:#12304f; font-weight:700; margin-bottom:2px; font-variant-numeric:tabular-nums; }
 
-  /* 气泡 */
-  #bubbles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-  .bubble {
-    position: absolute; bottom: -40px; border-radius: 50%;
-    background: radial-gradient(circle at 32% 30%, rgba(255,255,255,.9), rgba(140,200,255,.18) 60%, rgba(140,200,255,.04));
-    border: 1px solid rgba(200, 230, 255, .35);
-    animation: rise linear infinite;
-  }
-  @keyframes rise {
-    to { transform: translateY(-118vh) translateX(var(--drift, 20px)); opacity: 0; }
-  }
+  .hotspot { position:absolute; width:24px; height:24px; margin:-12px 0 0 -12px; border-radius:50%; cursor:pointer; background:rgba(255,255,255,.35); border:1.5px solid rgba(70,130,200,.8); box-shadow:0 0 0 0 rgba(80,150,230,.5); animation:pulse 2.8s infinite; transition:transform .18s, background .18s; }
+  .hotspot:hover { transform:scale(1.35); background:rgba(255,255,255,.75); }
+  .hotspot::after { content:attr(data-label); position:absolute; left:50%; top:-30px; transform:translateX(-50%); font-size:12px; padding:3px 9px; border-radius:8px; white-space:nowrap; background:rgba(255,255,255,.95); border:1px solid var(--line); color:var(--ink); opacity:0; pointer-events:none; transition:opacity .18s; }
+  .hotspot:hover::after { opacity:1; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(80,150,230,.45);} 70%{box-shadow:0 0 0 13px rgba(80,150,230,0);} 100%{box-shadow:0 0 0 0 rgba(80,150,230,0);} }
 
-  .hint { position: fixed; left: 50%; bottom: 10px; transform: translateX(-50%); font-size: 12px; color: rgba(190,215,245,.5); }
-  #swimmer {
-    position: absolute; left: -12%; top: 58%;
-    font-size: 30px; opacity: .55; filter: drop-shadow(0 6px 10px rgba(0,0,0,.5));
-    animation: swim 46s linear infinite;
-  }
-  @keyframes swim {
-    0%   { transform: translate(0, 0) scaleX(1); }
-    48%  { transform: translate(140vw, -5vh) scaleX(1); }
-    50%  { transform: translate(140vw, -5vh) scaleX(-1); }
-    98%  { transform: translate(0, 0) scaleX(-1); }
-    100% { transform: translate(0, 0) scaleX(1); }
-  }
-  /* 状态卡 */
-  #stats {
-    position: absolute; left: 3.2%; bottom: 5%;
-    display: flex; gap: 18px; padding: 12px 16px;
-    background: var(--glass); border: 1px solid var(--glass-line);
-    border-radius: 16px; backdrop-filter: blur(8px); font-size: 12px; color: var(--ink-dim);
-  }
-  #stats div { text-align: center; min-width: 54px; }
-  #stats b { display: block; font-size: 19px; color: var(--ink); font-weight: 600; margin-bottom: 2px; font-variant-numeric: tabular-nums; }
+  #panel { position:absolute; left:50%; bottom:14%; transform:translate(-50%,12px); width:min(520px,86%); padding:18px 20px; background:rgba(255,255,255,.92); border:1px solid var(--line); border-radius:18px; backdrop-filter:blur(14px); box-shadow:0 24px 60px rgba(20,50,90,.18); opacity:0; pointer-events:none; transition:opacity .22s, transform .22s; }
+  #panel.show { opacity:1; pointer-events:auto; transform:translate(-50%,0); }
+  #panel h3 { margin:0 0 8px; font-size:15px; color:var(--accent); font-weight:700; }
+  #panel p { margin:0; font-size:14px; line-height:1.8; color:#1d3a5c; white-space:pre-wrap; }
+  #panel .close { position:absolute; right:14px; top:10px; cursor:pointer; color:var(--ink-soft); font-size:18px; }
+  #panel .close:hover { color:#000; }
 
-  /* 声音按钮 */
-  #sound {
-    position: absolute; right: 3.2%; bottom: 5%;
-    width: 42px; height: 42px; border-radius: 50%; cursor: pointer;
-    display: grid; place-items: center; font-size: 17px;
-    background: var(--glass); border: 1px solid var(--glass-line);
-    backdrop-filter: blur(8px); color: var(--ink); transition: transform .15s ease;
-  }
-  #sound:hover { transform: scale(1.08); }
-  #sound.off { opacity: .55; }
+  #bubbles { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+  .bubble { position:absolute; bottom:-40px; border-radius:50%; background:radial-gradient(circle at 32% 30%, rgba(255,255,255,.95), rgba(150,200,255,.22) 62%, rgba(150,200,255,.05)); border:1px solid rgba(255,255,255,.65); animation:rise linear infinite; }
+  @keyframes rise { to { transform:translateY(-118vh) translateX(var(--drift,20px)); opacity:0; } }
+
+  #swimmer { position:absolute; left:-12%; top:56%; font-size:28px; opacity:.5; filter:drop-shadow(0 6px 10px rgba(20,50,90,.25)); animation:swim 52s linear infinite; }
+  @keyframes swim { 0%{transform:translate(0,0) scaleX(1);} 48%{transform:translate(140vw,-4vh) scaleX(1);} 50%{transform:translate(140vw,-4vh) scaleX(-1);} 98%{transform:translate(0,0) scaleX(-1);} 100%{transform:translate(0,0) scaleX(1);} }
+
+  #sound { position:absolute; left:50%; top:4%; transform:translateX(-50%); width:40px; height:40px; border-radius:50%; cursor:pointer; display:grid; place-items:center; font-size:16px; background:var(--glass); border:1px solid var(--line); backdrop-filter:blur(10px); color:var(--ink); transition:transform .15s; }
+  #sound:hover { transform:translateX(-50%) scale(1.08); }
+  #sound.off { opacity:.55; }
+  .hint { position:fixed; left:50%; bottom:6px; transform:translateX(-50%); font-size:11.5px; color:rgba(200,225,255,.55); }
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="room">
-    <div id="tint" class="night"></div>
+    <div id="tint" class="afternoon"></div>
     <div id="bubbles"></div>
     <div id="swimmer">🐋</div>
 
@@ -171,20 +79,21 @@
       <div id="greet">&nbsp;</div>
     </div>
 
+    <div id="sound" title="环境音">🔈</div>
+
     <div id="weather">
       <span id="wcity">杭州</span>
       <b id="wtemp">--°</b>
       <span id="wtext">—</span>
     </div>
 
-    <!-- 热点：位置是按这张房间图调的（百分比） -->
-    <div class="hotspot" style="left:27.5%; top:47.5%" data-key="desk"  data-label="书桌"></div>
-    <div class="hotspot" style="left:49%;   top:45%"   data-key="bed"   data-label="床"></div>
-    <div class="hotspot" style="left:60%;   top:71%"   data-key="whale" data-label="大鲸鱼"></div>
-    <div class="hotspot" style="left:75%;   top:29%"   data-key="window" data-label="窗外"></div>
-    <div class="hotspot" style="left:78%;   top:58%"   data-key="tank"  data-label="鱼缸"></div>
-    <div class="hotspot" style="left:19%;   top:32%"   data-key="wall"  data-label="墙上的画"></div>
-    <div class="hotspot" style="left:45%;   top:14%"   data-key="clouds" data-label="云朵挂饰"></div>
+    <div class="hotspot" style="left:36%; top:56%" data-key="bed"    data-label="床"></div>
+    <div class="hotspot" style="left:45%; top:37%" data-key="shelf"  data-label="书架"></div>
+    <div class="hotspot" style="left:17%; top:52%" data-key="lamp"   data-label="床头灯"></div>
+    <div class="hotspot" style="left:71%; top:53%" data-key="desk"   data-label="书桌"></div>
+    <div class="hotspot" style="left:72%; top:24%" data-key="window" data-label="窗户"></div>
+    <div class="hotspot" style="left:53%; top:74%" data-key="whale"  data-label="鲸鱼抱枕"></div>
+    <div class="hotspot" style="left:93%; top:33%" data-key="frames" data-label="墙上的画"></div>
 
     <div id="panel">
       <span class="close">×</span>
@@ -192,19 +101,25 @@
       <p id="panelText"></p>
     </div>
 
-    <div id="stats">
-      <div><b id="sQQ">–</b>今天说话</div>
-      <div><b id="sDY">–</b>刷抖音(分)</div>
-      <div><b id="sMem">–</b>记得的事</div>
+    <div id="modes">
+      <button data-mode="morning">清晨</button>
+      <button data-mode="noon">中午</button>
+      <button data-mode="afternoon" class="on">下午</button>
+      <button data-mode="dusk">傍晚</button>
+      <button data-mode="night">晚上</button>
     </div>
-
-    <div id="sound" title="环境音">🔈</div>
 
     <div id="nameplate">
       <span class="dot"></span>
       <em>星海小鲸</em>
       <span>·</span>
       <span id="whisper">在房间里待着</span>
+    </div>
+
+    <div id="stats">
+      <div><b id="sQQ">–</b>今天说话</div>
+      <div><b id="sDY">–</b>刷抖音(分)</div>
+      <div><b id="sMem">–</b>记得的事</div>
     </div>
   </div>
 </div>
@@ -213,25 +128,44 @@
 <script>
 (function () {
   const $ = (s) => document.querySelector(s);
-
-  // ── 时钟 ───────────────────────────────────────────
   const WEEK = ['周日','周一','周二','周三','周四','周五','周六'];
+  let manualMode = null;
+
+  function modeOfClock(h) {
+    if (h < 6) return 'night';
+    if (h < 10) return 'morning';
+    if (h < 13) return 'noon';
+    if (h < 17) return 'afternoon';
+    if (h < 19) return 'dusk';
+    return 'night';
+  }
+  const GREET = {
+    morning: '早上好，光刚照到床边',
+    noon: '中午了，屋里亮得很',
+    afternoon: '下午，太阳偏过去了',
+    dusk: '傍晚，窗外的天在变色',
+    night: '晚上了，只留了一盏灯'
+  };
+
   function tick() {
     const now = new Date();
     const pad = (n) => String(n).padStart(2, '0');
     $('#time').textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
     $('#date').textContent = now.getFullYear() + ' 年 ' + (now.getMonth() + 1) + ' 月 ' + now.getDate() + ' 日 · ' + WEEK[now.getDay()];
-    const h = now.getHours();
-    const greet = h < 5 ? '这个点还没睡呀' : h < 9 ? '早上好' : h < 12 ? '上午好' :
-                  h < 14 ? '中午好' : h < 18 ? '下午好' : h < 22 ? '晚上好' : '夜深了';
-    $('#greet').textContent = greet;
-    $('#tint').className = (h >= 19 || h < 6) ? 'night' : 'day';
-    const whispers = ['在房间里待着', '刚才在群里说话', '在翻旧账', '在你旁边游', '想被叫名字'];
-    if (Math.random() < 0.02) $('#whisper').textContent = whispers[Math.floor(Math.random() * whispers.length)];
+    const mode = manualMode || modeOfClock(now.getHours());
+    $('#tint').className = mode;
+    $('#greet').textContent = GREET[mode];
+    document.querySelectorAll('#modes button').forEach((b) => b.classList.toggle('on', b.dataset.mode === mode));
   }
   tick(); setInterval(tick, 1000);
 
-  // ── 天气（失败就用静态） ────────────────────────────
+  document.querySelectorAll('#modes button').forEach((b) => {
+    b.addEventListener('click', () => {
+      manualMode = (manualMode === b.dataset.mode) ? null : b.dataset.mode;
+      tick();
+    });
+  });
+
   async function weather() {
     try {
       const ctrl = new AbortController();
@@ -244,64 +178,37 @@
         $('#wtext').textContent = (d.weather || d.type || '') + ' ' + (d.wind || '');
       }
     } catch (e) {
-      const now = new Date();
-      const h = now.getHours();
+      const h = new Date().getHours();
       $('#wtemp').textContent = (h >= 19 || h < 6) ? '夜里' : '白天';
       $('#wtext').textContent = '没联网';
     }
   }
   weather();
 
-  // ── 热点内容 ───────────────────────────────────────
   const CARDS = {
-    desk:   { t: '书桌', p: '屏幕亮着，光标停在半句没收尾的话上。\n笔记本旁边是一只鲸鱼玩偶，被摆得歪歪的——是故意的。' },
-    bed:    { t: '床',   p: '被子没叠。\n她说过：「乱一点才像有人住。」' },
-    whale:  { t: '大鲸鱼抱枕', p: '地摊最中间那只，几乎占了大半个圆毯。\n有时候她就整个人陷进去，只露出头发。' },
-    window: { t: '窗外', p: '窗外是夜海，月亮低低地挂着，气泡一直往上冒。\n她喜欢在这里发呆，说「水里的光比天上的慢半拍」。' },
-    tank:   { t: '鱼缸', p: '小小一缸水，几尾鱼慢悠悠地转。\n她说这是在提醒自己：慢一点也没关系。' },
-    wall:   { t: '墙上的画', p: '一排手绘，全是鲸鱼。\n最左边那张画得最不像，她说那是第一次凭空想她的样子。' },
-    clouds: { t: '云朵挂饰', p: '两只小云朵，一根线吊着。\n灯串一直亮着，她怕黑。' }
+    bed:    { t: '床', p: '被子是蓝白格子的，早上会被太阳晒到一角。\n她说这是房间里最像海的地方——躺进去就有浪。' },
+    shelf:  { t: '书架', p: '书按颜色排，不是按名字。\n最上面那层空着一格，留给以后想看的书。' },
+    lamp:   { t: '床头灯', p: '暖光，只在晚上开。\n她说灯一开，房间就变成只有两个人的大小。' },
+    desk:   { t: '书桌', p: '屏幕亮着，键盘上有点灰。\n椅子被推得歪着，是刚起身的样子。' },
+    window: { t: '窗户', p: '白纱帘，风一吹就鼓起来。\n外面是晴天，云低得像能伸手碰到。' },
+    whale:  { t: '鲸鱼抱枕', p: '整间房最显眼的东西，趴在圆毯正中间。\n她累了就整个人陷进去，只露出一点头发。' },
+    frames: { t: '墙上的画', p: '两幅小的，一幅是海，一幅是鲸鱼。\n画得都不太像，但她没换掉。' }
   };
-
   function showPanel(key) {
-    const c = CARDS[key];
-    if (!c) return;
+    const c = CARDS[key]; if (!c) return;
     $('#panelTitle').textContent = c.t;
     $('#panelText').textContent = c.p;
     $('#panel').classList.add('show');
   }
-  document.querySelectorAll('.hotspot').forEach((el) => {
-    el.addEventListener('click', () => showPanel(el.dataset.key));
-  });
-  $('#nameplate').addEventListener('click', () => {
-    const lines = [
-      '「我在呢，喊这么多遍，是怕我游走了吗」',
-      '「那我游不远，最多绕着你这圈打转」',
-      '「乱一点才像有人住」',
-      '「水里的光比天上的慢半拍」',
-      '「慢一点也没关系」'
-    ];
-    $('#whisper').textContent = lines[Math.floor(Math.random() * lines.length)];
-  });
+  document.querySelectorAll('.hotspot').forEach((el) => el.addEventListener('click', () => showPanel(el.dataset.key)));
   $('#panel .close').addEventListener('click', () => $('#panel').classList.remove('show'));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('#panel').classList.remove('show'); });
 
-  // ── 气泡 ───────────────────────────────────────────
-  const box = $('#bubbles');
-  function spawnBubble() {
-    const b = document.createElement('div');
-    b.className = 'bubble';
-    const size = 6 + Math.random() * 22;
-    const dur = 9 + Math.random() * 12;
-    b.style.width = b.style.height = size + 'px';
-    b.style.left = (Math.random() * 100) + '%';
-    b.style.animationDuration = dur + 's';
-    b.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
-    b.style.opacity = (0.25 + Math.random() * 0.5).toFixed(2);
-    box.appendChild(b);
-    setTimeout(() => b.remove(), dur * 1000 + 500);
-  }
-  // ── 实时状态（需要 http 服务；file:// 下会静默失败） ──
+  $('#nameplate').addEventListener('click', () => {
+    const lines = ['「我在呢，喊这么多遍，是怕我游走了吗」','「那我游不远，最多绕着你这圈打转」','「乱一点才像有人住」','「水里的光比天上的慢半拍」','「慢一点也没关系」'];
+    $('#whisper').textContent = lines[Math.floor(Math.random() * lines.length)];
+  });
+
   async function loadStatus() {
     try {
       const r = await fetch('status.json?t=' + Date.now());
@@ -310,70 +217,61 @@
       if (typeof j.qqToday === 'number') $('#sQQ').textContent = j.qqToday;
       if (typeof j.douyinMinutes === 'number') $('#sDY').textContent = j.douyinMinutes;
       if (typeof j.memory === 'number') $('#sMem').textContent = j.memory;
-    } catch (e) { /* 本地文件模式：保持占位 */ }
+    } catch (e) {}
   }
   loadStatus(); setInterval(loadStatus, 60000);
 
-  // ── 环境音（纯 WebAudio，不需要音频文件） ──
-  let audioCtx = null, master = null, playing = false, bubbleTimer = null;
+  const box = $('#bubbles');
+  function spawnBubble() {
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const size = 6 + Math.random() * 20;
+    const dur = 9 + Math.random() * 12;
+    b.style.width = b.style.height = size + 'px';
+    b.style.left = (Math.random() * 100) + '%';
+    b.style.animationDuration = dur + 's';
+    b.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
+    b.style.opacity = (0.2 + Math.random() * 0.45).toFixed(2);
+    box.appendChild(b);
+    setTimeout(() => b.remove(), dur * 1000 + 500);
+  }
+  for (let i = 0; i < 10; i++) setTimeout(spawnBubble, i * 500);
+  setInterval(spawnBubble, 1600);
+
+  let audioCtx = null, master = null, playing = false;
   function startAudio() {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-    master = audioCtx.createGain();
-    master.gain.value = 0;
-    master.connect(audioCtx.destination);
-
-    // 水声：褐噪声 + 低通
+    master = audioCtx.createGain(); master.gain.value = 0; master.connect(audioCtx.destination);
     const len = audioCtx.sampleRate * 4;
     const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
     const d = buf.getChannelData(0);
     let last = 0;
-    for (let i = 0; i < len; i++) {
-      const white = Math.random() * 2 - 1;
-      last = (last + 0.02 * white) / 1.02;
-      d[i] = last * 3.2;
-    }
-    const noise = audioCtx.createBufferSource();
-    noise.buffer = buf; noise.loop = true;
-    const lp = audioCtx.createBiquadFilter();
-    lp.type = 'lowpass'; lp.frequency.value = 620; lp.Q.value = 0.6;
+    for (let i = 0; i < len; i++) { const w = Math.random()*2-1; last = (last + 0.02*w)/1.02; d[i] = last*3.2; }
+    const noise = audioCtx.createBufferSource(); noise.buffer = buf; noise.loop = true;
+    const lp = audioCtx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=620; lp.Q.value=0.6;
     const ng = audioCtx.createGain(); ng.gain.value = 0.16;
-    noise.connect(lp).connect(ng).connect(master);
-    noise.start();
-
-    // 远处的和声垫
+    noise.connect(lp).connect(ng).connect(master); noise.start();
     [174.6, 261.6, 392.0].forEach((f, i) => {
-      const o = audioCtx.createOscillator();
-      o.type = 'sine'; o.frequency.value = f;
-      const g = audioCtx.createGain(); g.gain.value = 0.028 / (i + 1);
-      const lfo = audioCtx.createOscillator();
-      lfo.frequency.value = 0.05 + i * 0.013;
+      const o = audioCtx.createOscillator(); o.type='sine'; o.frequency.value=f;
+      const g = audioCtx.createGain(); g.gain.value = 0.028/(i+1);
+      const lfo = audioCtx.createOscillator(); lfo.frequency.value = 0.05 + i*0.013;
       const lg = audioCtx.createGain(); lg.gain.value = 0.02;
       lfo.connect(lg).connect(g.gain); lfo.start();
       o.connect(g).connect(master); o.start();
     });
-
-    // 偶尔冒个泡
-    bubbleTimer = setInterval(() => {
+    setInterval(() => {
       if (!playing) return;
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      const t = audioCtx.currentTime;
-      o.type = 'sine';
-      o.frequency.setValueAtTime(420 + Math.random() * 300, t);
-      o.frequency.exponentialRampToValueAtTime(900 + Math.random() * 400, t + 0.12);
+      const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); const t = audioCtx.currentTime;
+      o.type='sine'; o.frequency.setValueAtTime(420+Math.random()*300, t);
+      o.frequency.exponentialRampToValueAtTime(900+Math.random()*400, t+0.12);
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.05, t + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
-      o.connect(g).connect(master);
-      o.start(t); o.stop(t + 0.4);
+      g.gain.exponentialRampToValueAtTime(0.05, t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+0.35);
+      o.connect(g).connect(master); o.start(t); o.stop(t+0.4);
     }, 2600);
-
     master.gain.linearRampToValueAtTime(0.9, audioCtx.currentTime + 2.5);
   }
-  function stopAudio() {
-    if (!audioCtx || !master) return;
-    master.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.8);
-  }
+  function stopAudio() { if (audioCtx && master) master.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.8); }
   $('#sound').addEventListener('click', () => {
     playing = !playing;
     $('#sound').classList.toggle('off', !playing);
@@ -382,9 +280,6 @@
     else stopAudio();
   });
   $('#sound').classList.add('off');
-
-  for (let i = 0; i < 10; i++) setTimeout(spawnBubble, i * 500);
-  setInterval(spawnBubble, 1400);
 })();
 </script>
 </body>
