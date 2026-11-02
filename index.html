@@ -10,7 +10,7 @@
   html, body { height:100%; margin:0; }
   body { background:radial-gradient(circle at 50% 42%, #16324f 0%, #08131f 62%, #050b13 100%); font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); overflow:hidden; user-select:none; }
   #stage { position:fixed; inset:0; display:grid; place-items:center; }
-  #room { position:relative; width:min(100vw, calc(100vh*1.5)); height:min(66.6667vw,100vh); background:url("assets/room6.jpg") center/cover no-repeat; }
+  #room { position:relative; width:min(100vw, calc(100vh*1.5)); height:min(66.6667vw,100vh); background:url("assets/room7.jpg") center/cover no-repeat; }
 
   #tint { position:absolute; inset:0; pointer-events:none; transition:background .9s ease; }
   #tint.morning  { background:linear-gradient(160deg, rgba(255,226,180,.26), rgba(255,255,255,0) 55%); }
@@ -48,13 +48,13 @@
   @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(80,150,230,.45);} 70%{box-shadow:0 0 0 13px rgba(80,150,230,0);} 100%{box-shadow:0 0 0 0 rgba(80,150,230,0);} }
 
 
-  #doorSign { position:absolute; left:53.4%; top:71.2%; width:8.6%; height:3.4%; display:flex; align-items:center; justify-content:center;
+  #doorSign { position:absolute; left:80.9%; top:35.1%; width:7.9%; height:3.3%; display:flex; align-items:center; justify-content:center;
     font-size:10.5px; letter-spacing:2px; color:#f6d594; background:linear-gradient(180deg,#142a45,#0b192b);
     border:1.2px solid #c9a44c; border-radius:4px; box-shadow:0 3px 8px rgba(0,0,0,.55); cursor:pointer; z-index:8; transform-origin:50% 0; }
   #doorSign:hover { color:#ffe6b0; }
   #doorSign.knocking { animation:knock .45s ease-in-out 3; }
   @keyframes knock { 0%,100%{transform:rotate(0);} 25%{transform:rotate(-4deg);} 75%{transform:rotate(4deg);} }
-  #knockTag { position:absolute; left:53.4%; top:75.2%; width:8.6%; text-align:center; font-size:7.5px; letter-spacing:1px; color:#dce9f7;
+  #knockTag { position:absolute; left:80.9%; top:39.0%; width:7.9%; text-align:center; font-size:7.5px; letter-spacing:1px; color:#dce9f7;
     background:rgba(9,22,38,.78); border:1px solid rgba(180,210,240,.32); border-radius:3px; padding:1px 0; z-index:8; }
 
   #her { position:absolute; width:19%; transform-origin:50% 100%; pointer-events:auto; cursor:pointer; z-index:6; transition:left 1.1s ease, top 1.1s ease; }
@@ -91,7 +91,7 @@
     <div id="doorSign">星海小鲸</div>
     <div id="knockTag">进门前请先敲门</div>
 
-    <div id="her" style="left:46%; top:68%">
+    <div id="her" style="left:50%; top:70%">
       <div id="herTag">小鲸</div>
       <video id="herVid" autoplay loop muted playsinline></video>
       <div class="shadow"></div>
@@ -113,16 +113,16 @@
       <span id="wtext">—</span>
     </div>
 
-    <div class="hotspot" style="left:32%; top:55%" data-key="bed"    data-label="床"></div>
-    <div class="hotspot" style="left:19.5%; top:54%" data-key="lamp"   data-label="床头灯"></div>
-    <div class="hotspot" style="left:25%; top:32%" data-key="starmap" data-label="星图"></div>
-    <div class="hotspot" style="left:43%; top:24%" data-key="window" data-label="落地窗"></div>
-    <div class="hotspot" style="left:44%; top:41%" data-key="chair"  data-label="看海的躺椅"></div>
-    <div class="hotspot" style="left:64%; top:42%" data-key="wardrobe" data-label="衣柜"></div>
-    <div class="hotspot" style="left:78%; top:44%" data-key="shelf"  data-label="书架"></div>
-    <div class="hotspot" style="left:74%; top:54%" data-key="rice"   data-label="一碗白饭"></div>
-    <div class="hotspot" style="left:54%; top:56%" data-key="sofa"   data-label="鲸鱼沙发"></div>
-    <div class="hotspot" style="left:49%; top:65%" data-key="whale"  data-label="鲸鱼玩偶"></div>
+    <div class="hotspot" style="left:25%; top:53%" data-key="bed"    data-label="床"></div>
+    <div class="hotspot" style="left:13%; top:56%" data-key="lamp"   data-label="床头灯"></div>
+    <div class="hotspot" style="left:21.5%; top:32%" data-key="starmap" data-label="星图"></div>
+    <div class="hotspot" style="left:44%; top:24%" data-key="window" data-label="落地窗"></div>
+    <div class="hotspot" style="left:45.5%; top:49%" data-key="chair"  data-label="看海的躺椅"></div>
+    <div class="hotspot" style="left:64.5%; top:32%" data-key="shelf"  data-label="书架（顶层空着）"></div>
+    <div class="hotspot" style="left:73.5%; top:37%" data-key="wardrobe" data-label="衣柜"></div>
+    <div class="hotspot" style="left:70%; top:53%" data-key="rice"   data-label="一碗白饭"></div>
+    <div class="hotspot" style="left:52%; top:68%" data-key="sofa"   data-label="鲸鱼沙发"></div>
+    <div class="hotspot" style="left:45.5%; top:76%" data-key="whale"  data-label="鲸鱼玩偶"></div>
     <div id="panel">
       <span class="close">×</span>
       <h3 id="panelTitle"></h3>
@@ -222,8 +222,8 @@
   }
   setClip('idle');
 
-  const FLOOR = { x0: 28, x1: 72, y0: 58, y1: 78 };
-  let herPos = { x: 46, y: 68 };
+  const FLOOR = { x0: 30, x1: 76, y0: 60, y1: 80 };
+  let herPos = { x: 50, y: 70 };
   function placeHer(x, y) {
     herPos = { x, y };
     const depth = (y - FLOOR.y0) / (FLOOR.y1 - FLOOR.y0);
@@ -306,7 +306,7 @@
     wardrobe: { t: '衣柜', p: '双开门的白衣柜，一半是她的裙子，一半空着。\n空的那半，她说迟早会有人用上。' },
     whale:  { t: '鲸鱼抱枕', p: '整间房最显眼的东西，趴在圆毯正中间。\n她累了就整个人陷进去，只露出一点头发。' }
   };
-  const SPOT = { bed:[32,68], shelf:[74,68], lamp:[24,68], desk:[70,70], rice:[70,72], window:[45,64], whale:[49,74], sofa:[55,68], wardrobe:[62,68], starmap:[30,66], chair:[45,66] };
+  const SPOT = { bed:[28,66], shelf:[63,64], lamp:[18,66], desk:[68,66], rice:[66,68], window:[44,62], whale:[45,74], sofa:[52,70], wardrobe:[71,64], starmap:[26,64], chair:[45,64] };
   function showPanel(key) {
     const c = CARDS[key]; if (!c) return;
     $('#panelTitle').textContent = c.t;
