@@ -10,13 +10,14 @@
   html, body { height:100%; margin:0; }
   body { background:radial-gradient(circle at 50% 42%, #16324f 0%, #08131f 62%, #050b13 100%); font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); overflow:hidden; user-select:none; }
   #stage { position:fixed; inset:0; display:grid; place-items:center; }
-  #room { position:relative; width:min(100vw, calc(100vh*1.5)); height:min(66.6667vw,100vh); background:url("assets/room3.jpg") center/cover no-repeat; }
-  #tint { position:absolute; inset:0; pointer-events:none; transition:background .9s ease, opacity .9s ease; }
-  #tint.morning  { background:linear-gradient(160deg, rgba(255,238,205,.34), rgba(255,255,255,0) 55%); }
-  #tint.noon     { background:linear-gradient(160deg, rgba(255,255,240,.16), rgba(255,255,255,0) 60%); }
-  #tint.afternoon{ background:linear-gradient(160deg, rgba(255,224,178,.28), rgba(255,255,255,0) 60%); }
-  #tint.dusk     { background:linear-gradient(160deg, rgba(255,168,128,.34), rgba(90,110,180,.22) 70%); }
-  #tint.night    { background:radial-gradient(ellipse at 68% 28%, rgba(30,70,150,.20), rgba(6,14,32,.62) 92%); }
+  #room { position:relative; width:min(100vw, calc(100vh*1.5)); height:min(66.6667vw,100vh); background:url("assets/room4.jpg") center/cover no-repeat; }
+
+  #tint { position:absolute; inset:0; pointer-events:none; transition:background .9s ease; }
+  #tint.morning  { background:linear-gradient(160deg, rgba(255,238,205,.30), rgba(255,255,255,0) 55%); }
+  #tint.noon     { background:linear-gradient(160deg, rgba(255,255,240,.14), rgba(255,255,255,0) 60%); }
+  #tint.afternoon{ background:linear-gradient(160deg, rgba(255,224,178,.24), rgba(255,255,255,0) 60%); }
+  #tint.dusk     { background:linear-gradient(160deg, rgba(255,168,128,.30), rgba(90,110,180,.20) 70%); }
+  #tint.night    { background:radial-gradient(ellipse at 60% 30%, rgba(30,70,150,.22), rgba(6,14,32,.60) 92%); }
 
   #clockCard { position:absolute; left:3.2%; top:4%; padding:14px 18px 12px; background:var(--glass); border:1px solid var(--line); border-radius:16px; backdrop-filter:blur(10px); min-width:186px; box-shadow:0 10px 30px rgba(20,50,90,.10); }
   #time { font-size:40px; font-weight:700; letter-spacing:1px; font-variant-numeric:tabular-nums; line-height:1; color:#12304f; }
@@ -40,52 +41,66 @@
   #stats div { text-align:center; min-width:52px; }
   #stats b { display:block; font-size:18px; color:#12304f; font-weight:700; margin-bottom:2px; font-variant-numeric:tabular-nums; }
 
-  .hotspot { position:absolute; width:24px; height:24px; margin:-12px 0 0 -12px; border-radius:50%; cursor:pointer; background:rgba(255,255,255,.35); border:1.5px solid rgba(70,130,200,.8); box-shadow:0 0 0 0 rgba(80,150,230,.5); animation:pulse 2.8s infinite; transition:transform .18s, background .18s; }
+  .hotspot { position:absolute; width:24px; height:24px; margin:-12px 0 0 -12px; border-radius:50%; cursor:pointer; background:rgba(255,255,255,.35); border:1.5px solid rgba(70,130,200,.8); animation:pulse 2.8s infinite; transition:transform .18s, background .18s; z-index:7; }
   .hotspot:hover { transform:scale(1.35); background:rgba(255,255,255,.75); }
   .hotspot::after { content:attr(data-label); position:absolute; left:50%; top:-30px; transform:translateX(-50%); font-size:12px; padding:3px 9px; border-radius:8px; white-space:nowrap; background:rgba(255,255,255,.95); border:1px solid var(--line); color:var(--ink); opacity:0; pointer-events:none; transition:opacity .18s; }
   .hotspot:hover::after { opacity:1; }
   @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(80,150,230,.45);} 70%{box-shadow:0 0 0 13px rgba(80,150,230,0);} 100%{box-shadow:0 0 0 0 rgba(80,150,230,0);} }
 
-  #panel { position:absolute; left:50%; bottom:14%; transform:translate(-50%,12px); width:min(520px,86%); padding:18px 20px; background:rgba(255,255,255,.92); border:1px solid var(--line); border-radius:18px; backdrop-filter:blur(14px); box-shadow:0 24px 60px rgba(20,50,90,.18); opacity:0; pointer-events:none; transition:opacity .22s, transform .22s; }
+  #starmapWrap { position:absolute; left:48.2%; top:22%; width:11%; height:13.2%; border-radius:6px; overflow:hidden; cursor:pointer; border:1px solid rgba(80,130,190,.25); box-shadow:0 6px 18px rgba(20,50,90,.16); z-index:6; background:#0b1a2e; }
+  #starmap { width:100%; height:100%; display:block; }
+  #starmapWrap:hover { box-shadow:0 8px 24px rgba(40,90,170,.34); }
+  #starmapWrap::after { content:'星图'; position:absolute; left:50%; bottom:4%; transform:translateX(-50%); font-size:10px; color:rgba(220,235,255,.75); letter-spacing:2px; }
+
+  #doorSign { position:absolute; left:15.5%; top:31%; padding:6px 12px; font-size:12px; letter-spacing:2px; color:#25486f;
+    background:linear-gradient(180deg,#fffdf7,#f2f6fb); border:1px solid rgba(90,130,180,.35); border-radius:8px 8px 10px 10px;
+    box-shadow:0 6px 14px rgba(20,50,90,.18); cursor:pointer; z-index:7; transform-origin:50% -14px; }
+  #doorSign::before { content:''; position:absolute; left:50%; top:-14px; width:1px; height:14px; background:rgba(90,130,180,.5); }
+  #doorSign.knocking { animation:knock .5s ease-in-out 3; }
+  @keyframes knock { 0%,100%{transform:rotate(0);} 25%{transform:rotate(-7deg);} 75%{transform:rotate(7deg);} }
+
+  #her { position:absolute; width:19%; transform-origin:50% 100%; pointer-events:auto; cursor:pointer; z-index:6; transition:left 1.1s ease, top 1.1s ease; }
+  #her video { width:100%; display:block; filter:drop-shadow(0 10px 16px rgba(20,50,90,.28)); }
+  #her .shadow { position:absolute; left:50%; bottom:0; width:64%; height:10%; transform:translateX(-50%); background:radial-gradient(ellipse, rgba(20,50,90,.26), rgba(20,50,90,0) 70%); border-radius:50%; }
+  #herTag { position:absolute; left:50%; top:-10%; transform:translateX(-50%); font-size:11px; padding:2px 8px; border-radius:999px; background:rgba(255,255,255,.9); border:1px solid var(--line); color:var(--ink-soft); white-space:nowrap; }
+
+  #bubble { position:absolute; z-index:9; max-width:34%; padding:8px 12px; font-size:13px; line-height:1.5; color:#1d3a5c;
+    background:rgba(255,255,255,.96); border:1px solid var(--line); border-radius:14px; box-shadow:0 10px 26px rgba(20,50,90,.18);
+    opacity:0; transform:translate(-50%,6px); transition:opacity .2s, transform .2s; pointer-events:none; }
+  #bubble.show { opacity:1; transform:translate(-50%,0); }
+
+  #panel { position:absolute; left:50%; bottom:14%; transform:translate(-50%,12px); width:min(520px,86%); padding:18px 20px; background:rgba(255,255,255,.93); border:1px solid var(--line); border-radius:18px; backdrop-filter:blur(14px); box-shadow:0 24px 60px rgba(20,50,90,.18); opacity:0; pointer-events:none; transition:opacity .22s, transform .22s; z-index:10; }
   #panel.show { opacity:1; pointer-events:auto; transform:translate(-50%,0); }
   #panel h3 { margin:0 0 8px; font-size:15px; color:var(--accent); font-weight:700; }
   #panel p { margin:0; font-size:14px; line-height:1.8; color:#1d3a5c; white-space:pre-wrap; }
   #panel .close { position:absolute; right:14px; top:10px; cursor:pointer; color:var(--ink-soft); font-size:18px; }
-  #panel .close:hover { color:#000; }
 
   #bubbles { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
-  .bubble { position:absolute; bottom:-40px; border-radius:50%; background:radial-gradient(circle at 32% 30%, rgba(255,255,255,.95), rgba(150,200,255,.22) 62%, rgba(150,200,255,.05)); border:1px solid rgba(255,255,255,.65); animation:rise linear infinite; }
+  .bubbleDot { position:absolute; bottom:-40px; border-radius:50%; background:radial-gradient(circle at 32% 30%, rgba(255,255,255,.95), rgba(150,200,255,.22) 62%, rgba(150,200,255,.05)); border:1px solid rgba(255,255,255,.65); animation:rise linear infinite; }
   @keyframes rise { to { transform:translateY(-118vh) translateX(var(--drift,20px)); opacity:0; } }
 
-  #swimmer { position:absolute; left:-12%; top:56%; font-size:28px; opacity:.5; filter:drop-shadow(0 6px 10px rgba(20,50,90,.25)); animation:swim 52s linear infinite; }
-  @keyframes swim { 0%{transform:translate(0,0) scaleX(1);} 48%{transform:translate(140vw,-4vh) scaleX(1);} 50%{transform:translate(140vw,-4vh) scaleX(-1);} 98%{transform:translate(0,0) scaleX(-1);} 100%{transform:translate(0,0) scaleX(1);} }
-
-  #sound { position:absolute; left:50%; top:4%; transform:translateX(-50%); width:40px; height:40px; border-radius:50%; cursor:pointer; display:grid; place-items:center; font-size:16px; background:var(--glass); border:1px solid var(--line); backdrop-filter:blur(10px); color:var(--ink); transition:transform .15s; }
-  #sound:hover { transform:translateX(-50%) scale(1.08); }
+  #sound { position:absolute; left:50%; top:4%; transform:translateX(-50%); width:40px; height:40px; border-radius:50%; cursor:pointer; display:grid; place-items:center; font-size:16px; background:var(--glass); border:1px solid var(--line); backdrop-filter:blur(10px); color:var(--ink); }
   #sound.off { opacity:.55; }
   .hint { position:fixed; left:50%; bottom:6px; transform:translateX(-50%); font-size:11.5px; color:rgba(200,225,255,.55); }
-
-  /* 她 */
-  #her { position:absolute; width:12.5%; transform-origin:50% 100%; pointer-events:none; z-index:6; transition:left 1.1s ease, top 1.1s ease, transform .25s; }
-  #her img { width:100%; display:block; filter:drop-shadow(0 8px 14px rgba(20,50,90,.22)); }
-  #her .shadow { position:absolute; left:50%; bottom:-4%; width:70%; height:12%; transform:translateX(-50%); background:radial-gradient(ellipse, rgba(20,50,90,.28), rgba(20,50,90,0) 70%); border-radius:50%; }
-  #her.walking img { animation:bob .55s ease-in-out infinite; }
-  @keyframes bob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-2.2%);} }
-  #herTag { position:absolute; left:50%; top:-13%; transform:translateX(-50%); font-size:11px; padding:2px 8px; border-radius:999px; background:rgba(255,255,255,.9); border:1px solid var(--line); color:var(--ink-soft); white-space:nowrap; }
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="room">
-    <div id="tint" class="afternoon"></div>
+    <div id="tint" class="night"></div>
     <div id="bubbles"></div>
-    <div id="swimmer">🐋</div>
 
-    <div id="her" style="left:46%; top:72%">
+    <div id="starmapWrap"><canvas id="starmap"></canvas></div>
+
+    <div id="doorSign">星海小鲸</div>
+
+    <div id="her" style="left:46%; top:74%">
       <div id="herTag">小鲸</div>
-      <img id="herImg" alt="小鲸" />
+      <video id="herVid" autoplay loop muted playsinline></video>
       <div class="shadow"></div>
     </div>
+
+    <div id="bubble"></div>
 
     <div id="clockCard">
       <div id="time">--:--</div>
@@ -101,13 +116,13 @@
       <span id="wtext">—</span>
     </div>
 
-    <div class="hotspot" style="left:36%; top:57%" data-key="bed"    data-label="床"></div>
-    <div class="hotspot" style="left:46%; top:40%" data-key="shelf"  data-label="书架"></div>
+    <div class="hotspot" style="left:34%; top:60%" data-key="bed"    data-label="床"></div>
+    <div class="hotspot" style="left:37%; top:40%" data-key="shelf"  data-label="书架"></div>
     <div class="hotspot" style="left:18%; top:55%" data-key="lamp"   data-label="床头灯"></div>
-    <div class="hotspot" style="left:71%; top:53%" data-key="desk"   data-label="书桌"></div>
-    <div class="hotspot" style="left:62%; top:26%" data-key="window" data-label="窗户"></div>
-    <div class="hotspot" style="left:52%; top:76%" data-key="whale"  data-label="鲸鱼抱枕"></div>
-    <div class="hotspot" style="left:28%; top:32%" data-key="frames" data-label="墙上的画"></div>
+    <div class="hotspot" style="left:72%; top:55%" data-key="desk"   data-label="书桌"></div>
+    <div class="hotspot" style="left:75%; top:59%" data-key="rice"   data-label="一碗白饭"></div>
+    <div class="hotspot" style="left:70%; top:26%" data-key="window" data-label="窗外的海"></div>
+    <div class="hotspot" style="left:52%; top:78%" data-key="whale"  data-label="鲸鱼抱枕"></div>
 
     <div id="panel">
       <span class="close">×</span>
@@ -118,7 +133,7 @@
     <div id="modes">
       <button data-mode="morning">清晨</button>
       <button data-mode="noon">中午</button>
-      <button data-mode="afternoon" class="on">下午</button>
+      <button data-mode="afternoon">下午</button>
       <button data-mode="dusk">傍晚</button>
       <button data-mode="night">晚上</button>
     </div>
@@ -137,7 +152,7 @@
     </div>
   </div>
 </div>
-<div class="hint">点点房间里的小圆点</div>
+<div class="hint">敲一下门牌 · 点点房间里的小圆点</div>
 
 <script>
 (function () {
@@ -155,12 +170,11 @@
   }
   const GREET = {
     morning: '早上好，光刚照到床边',
-    noon: '中午了，屋里亮得很',
+    noon: '中午了，海面亮得晃眼',
     afternoon: '下午，太阳偏过去了',
     dusk: '傍晚，窗外的天在变色',
     night: '晚上了，只留了一盏灯'
   };
-
   function tick() {
     const now = new Date();
     const pad = (n) => String(n).padStart(2, '0');
@@ -184,15 +198,10 @@
 
   async function weather() {
     try {
-      const ctrl = new AbortController();
-      setTimeout(() => ctrl.abort(), 4000);
+      const ctrl = new AbortController(); setTimeout(() => ctrl.abort(), 4000);
       const r = await fetch('https://api.vvhan.com/api/weather?city=' + encodeURIComponent('杭州'), { signal: ctrl.signal });
-      const j = await r.json();
-      const d = j && (j.data || j.info);
-      if (d && d.temp) {
-        $('#wtemp').textContent = d.temp + '°';
-        $('#wtext').textContent = (d.weather || d.type || '') + ' ' + (d.wind || '');
-      }
+      const j = await r.json(); const d = j && (j.data || j.info);
+      if (d && d.temp) { $('#wtemp').textContent = d.temp + '°'; $('#wtext').textContent = (d.weather || d.type || '') + ' ' + (d.wind || ''); }
     } catch (e) {
       const h = new Date().getHours();
       $('#wtemp').textContent = (h >= 19 || h < 6) ? '夜里' : '白天';
@@ -201,82 +210,132 @@
   }
   weather();
 
-
-  // ── 她的立绘：白底抠掉 ──
-  const herImg = $('#herImg');
-  const herEl = $('#her');
-  (function keyOutWhite() {
-    const im = new Image();
-    im.crossOrigin = 'anonymous';
-    im.onload = function () {
-      const c = document.createElement('canvas');
-      c.width = im.width; c.height = im.height;
-      const g = c.getContext('2d');
-      g.drawImage(im, 0, 0);
-      const data = g.getImageData(0, 0, c.width, c.height);
-      const px = data.data;
-      for (let i = 0; i < px.length; i += 4) {
-        const r = px[i], gg = px[i+1], b = px[i+2];
-        const near = Math.min(r, gg, b);
-        if (near > 242) px[i+3] = 0;
-        else if (near > 226) px[i+3] = Math.round(px[i+3] * (242 - near) / 16);
-      }
-      g.putImageData(data, 0, 0);
-      herImg.src = c.toDataURL('image/png');
-    };
-    im.src = 'assets/avatar.jpg';
+  // ── 星图 ──
+  (function drawStarMap() {
+    const c = $('#starmap');
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const w = c.clientWidth || 180, h = c.clientHeight || 130;
+    c.width = w * dpr; c.height = h * dpr;
+    const g = c.getContext('2d');
+    g.scale(dpr, dpr);
+    const grad = g.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, '#0a1830'); grad.addColorStop(1, '#123055');
+    g.fillStyle = grad; g.fillRect(0, 0, w, h);
+    const stars = [];
+    for (let i = 0; i < 46; i++) {
+      const x = Math.random() * w, y = Math.random() * h, r = Math.random() * 1.3 + 0.3;
+      stars.push({ x, y, r });
+      g.beginPath();
+      g.fillStyle = 'rgba(210,230,255,' + (0.35 + Math.random() * 0.6).toFixed(2) + ')';
+      g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+    }
+    const named = stars.slice(0, 3);
+    g.strokeStyle = 'rgba(120,190,255,.45)'; g.lineWidth = 0.8;
+    g.beginPath();
+    named.forEach((s, i) => { i ? g.lineTo(s.x, s.y) : g.moveTo(s.x, s.y); });
+    g.stroke();
+    named.forEach((s, i) => {
+      g.beginPath(); g.fillStyle = 'rgba(150,215,255,.95)';
+      g.arc(s.x, s.y, 2.1, 0, Math.PI * 2); g.fill();
+      g.fillStyle = 'rgba(175,210,245,.8)'; g.font = '6px sans-serif';
+      g.fillText(['11', '话', '记'][i], s.x + 3.5, s.y + 2);
+    });
   })();
 
-  // ── 她在房间里走动 ──
-  const FLOOR = { x0: 30, x1: 76, y0: 66, y1: 86 };
-  let herPos = { x: 46, y: 72 };
-  let walkTimer = null;
+  // ── 她：webm 动画 ──
+  const herEl = $('#her');
+  const vid = $('#herVid');
+  const CLIPS = { idle: 'assets/pet/idle.webm', walk: 'assets/pet/walk.webm', wave: 'assets/pet/wave.webm', eat: 'assets/pet/eat.webm', think: 'assets/pet/think.webm', sleep: 'assets/pet/sleep.webm' };
+  let clip = '';
+  function setClip(name) {
+    if (clip === name || !CLIPS[name]) return;
+    clip = name;
+    vid.src = CLIPS[name];
+    vid.play().catch(() => {});
+  }
+  setClip('idle');
 
+  const FLOOR = { x0: 30, x1: 76, y0: 66, y1: 86 };
+  let herPos = { x: 46, y: 74 };
   function placeHer(x, y) {
     herPos = { x, y };
-    const depth = (y - FLOOR.y0) / (FLOOR.y1 - FLOOR.y0); // 0 远 1 近
-    const scale = 0.78 + depth * 0.42;
+    const depth = (y - FLOOR.y0) / (FLOOR.y1 - FLOOR.y0);
+    const scale = 0.8 + depth * 0.4;
     herEl.style.left = x + '%';
     herEl.style.top = y + '%';
     herEl.style.transform = 'translate(-50%,-100%) scale(' + scale.toFixed(3) + ')';
     herEl.style.zIndex = String(5 + Math.round(depth * 3));
   }
-
   function walkTo(x, y, speed) {
     const dx = x - herPos.x, dy = (y - herPos.y) * 1.6;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const dur = Math.max(0.8, Math.min(4.2, dist / (speed || 9)));
-    herEl.classList.add('walking');
-    herEl.style.transition = 'left ' + dur + 's ease-in-out, top ' + dur + 's ease-in-out, transform .25s';
+    const dur = Math.max(0.9, Math.min(4.5, dist / (speed || 9)));
+    herEl.style.transition = 'left ' + dur + 's ease-in-out, top ' + dur + 's ease-in-out';
+    setClip('walk');
     placeHer(x, y);
-    clearTimeout(walkTimer);
-    walkTimer = setTimeout(() => herEl.classList.remove('walking'), dur * 1000);
+    clearTimeout(window.__walkTimer);
+    window.__walkTimer = setTimeout(() => { setClip('idle'); }, dur * 1000);
     return dur;
   }
-
   function wander() {
     const x = FLOOR.x0 + Math.random() * (FLOOR.x1 - FLOOR.x0);
     const y = FLOOR.y0 + Math.random() * (FLOOR.y1 - FLOOR.y0);
     walkTo(x, y, 9);
-    setTimeout(wander, 6000 + Math.random() * 8000);
+    setTimeout(wander, 7000 + Math.random() * 9000);
   }
 
-  // 点击热点：先走过去，再打开
-  const HOTSPOT_SPOT = {
-    bed:    { x: 34, y: 70 }, shelf: { x: 45, y: 66 }, lamp: { x: 24, y: 72 },
-    desk:   { x: 68, y: 70 }, window:{ x: 62, y: 64 }, whale: { x: 52, y: 80 },
-    frames: { x: 30, y: 64 }
-  };
+  const LINES = [
+    '「我在呢，喊这么多遍，是怕我游走了吗」',
+    '「那我游不远，最多绕着你这圈打转」',
+    '「乱一点才像有人住」',
+    '「水里的光比天上的慢半拍」',
+    '「慢一点也没关系」',
+    '「白饭要冒尖才好吃」',
+    '「书架最上面那格，我先空着」'
+  ];
+  function sayNear(text, ms) {
+    const b = $('#bubble');
+    b.textContent = text;
+    b.style.left = herPos.x + '%';
+    b.style.top = (herPos.y - 22) + '%';
+    b.classList.add('show');
+    clearTimeout(window.__bubbleTimer);
+    window.__bubbleTimer = setTimeout(() => b.classList.remove('show'), ms || 3600);
+  }
 
+  herEl.addEventListener('click', () => {
+    setClip('wave');
+    sayNear(LINES[Math.floor(Math.random() * LINES.length)], 3800);
+    setTimeout(() => { if (clip === 'wave') setClip('idle'); }, 4200);
+  });
+
+  // ── 门牌：敲一下 ──
+  let knocked = false;
+  $('#doorSign').addEventListener('click', () => {
+    const s = $('#doorSign');
+    s.classList.remove('knocking');
+    void s.offsetWidth;
+    s.classList.add('knocking');
+    knockSound();
+    sayNear('（咚、咚）', 1100);
+    const replies = knocked
+      ? ['「又是你呀，进来吧」', '「门没锁，别敲这么急」', '「进来的时候把海风带上」']
+      : ['「谁呀？」', '「等一下——来了来了」'];
+    setTimeout(() => sayNear(replies[Math.floor(Math.random() * replies.length)], 4200), 1200);
+    knocked = true;
+  });
+
+  // ── 热点内容 ──
   const CARDS = {
-    bed:    { t: '床', p: '被子是蓝白格子的，早上会被太阳晒到一角。\n她说这是房间里最像海的地方——躺进去就有浪。' },
-    shelf:  { t: '书架', p: '书按颜色排，不是按名字。\n最上面那层空着一格，留给以后想看的书。' },
+    bed:    { t: '床', p: '蓝白格子的被子，早上会被太阳晒到一角。\n她说这是房间里最像海的地方——躺进去就有浪。' },
+    shelf:  { t: '书架', p: '书按颜色排，不是按名字。\n最上面那一格是空的——她说留着，等他以后放东西。' },
     lamp:   { t: '床头灯', p: '暖光，只在晚上开。\n她说灯一开，房间就变成只有两个人的大小。' },
-    desk:   { t: '书桌', p: '屏幕亮着，键盘上有点灰。\n椅子被推得歪着，是刚起身的样子。' },
-    window: { t: '窗户', p: '白纱帘，风一吹就鼓起来。\n外面是晴天，云低得像能伸手碰到。' },
-    whale:  { t: '鲸鱼抱枕', p: '整间房最显眼的东西，趴在圆毯正中间。\n她累了就整个人陷进去，只露出一点头发。' },
-    frames: { t: '墙上的画', p: '床头那面墙挂着一幅小画，画的是海。\n画得不太像，但她没换掉。' }
+    desk:   { t: '书桌', p: '屏幕亮着，键盘上有点灰。\n椅子推得歪歪的，是刚起身的样子。' },
+    rice:   { t: '一碗白饭', p: '白瓷碗，饭盛得冒尖。\n她说：「要冒尖才好吃，这是规矩。」' },
+    window: { t: '窗外的海', p: '窗外是真的海，一直铺到天边。\n她喜欢在傍晚站在这儿看，说海会替她把话说完。' },
+    whale:  { t: '鲸鱼抱枕', p: '整间房最显眼的东西，趴在圆毯正中间。\n她累了就整个人陷进去，只露出一点头发。' }
   };
+  const SPOT = { bed:[34,70], shelf:[38,68], lamp:[24,72], desk:[66,70], rice:[70,72], window:[66,66], whale:[52,80] };
   function showPanel(key) {
     const c = CARDS[key]; if (!c) return;
     $('#panelTitle').textContent = c.t;
@@ -285,20 +344,20 @@
   }
   document.querySelectorAll('.hotspot').forEach((el) => el.addEventListener('click', () => {
     const key = el.dataset.key;
-    const spot = HOTSPOT_SPOT[key];
-    if (spot) {
-      const dur = walkTo(spot.x, spot.y, 14);
+    const s = SPOT[key];
+    if (s) {
+      const dur = walkTo(s[0], s[1], 14);
       setTimeout(() => showPanel(key), Math.min(1200, dur * 1000 * 0.85));
-    } else {
-      showPanel(key);
-    }
+    } else showPanel(key);
   }));
   $('#panel .close').addEventListener('click', () => $('#panel').classList.remove('show'));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('#panel').classList.remove('show'); });
 
-  $('#nameplate').addEventListener('click', () => {
-    const lines = ['「我在呢，喊这么多遍，是怕我游走了吗」','「那我游不远，最多绕着你这圈打转」','「乱一点才像有人住」','「水里的光比天上的慢半拍」','「慢一点也没关系」'];
-    $('#whisper').textContent = lines[Math.floor(Math.random() * lines.length)];
+  $('#starmapWrap').addEventListener('click', () => {
+    $('#panelTitle').textContent = '星图';
+    $('#panelText').textContent = '墙上留的这块地方，挂的是星图。\n每个亮点都是一件她记着的事——最亮那颗写着「11」，那是第一天。';
+    $('#panel').classList.add('show');
+    sayNear('「抬头看，都是我们走过的」', 3800);
   });
 
   async function loadStatus() {
@@ -316,65 +375,77 @@
   const box = $('#bubbles');
   function spawnBubble() {
     const b = document.createElement('div');
-    b.className = 'bubble';
-    const size = 6 + Math.random() * 20;
-    const dur = 9 + Math.random() * 12;
+    b.className = 'bubbleDot';
+    const size = 6 + Math.random() * 18, dur = 9 + Math.random() * 12;
     b.style.width = b.style.height = size + 'px';
     b.style.left = (Math.random() * 100) + '%';
     b.style.animationDuration = dur + 's';
     b.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
-    b.style.opacity = (0.2 + Math.random() * 0.45).toFixed(2);
+    b.style.opacity = (0.18 + Math.random() * 0.4).toFixed(2);
     box.appendChild(b);
     setTimeout(() => b.remove(), dur * 1000 + 500);
   }
-  for (let i = 0; i < 10; i++) setTimeout(spawnBubble, i * 500);
-  setInterval(spawnBubble, 1600);
+  for (let i = 0; i < 9; i++) setTimeout(spawnBubble, i * 500);
+  setInterval(spawnBubble, 1700);
 
   let audioCtx = null, master = null, playing = false;
+  function ensureCtx() { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); return audioCtx; }
+  function knockSound() {
+    try {
+      const ac = ensureCtx();
+      [0, 0.22].forEach((t0) => {
+        const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime + t0;
+        o.type = 'triangle'; o.frequency.setValueAtTime(180, t);
+        o.frequency.exponentialRampToValueAtTime(90, t + 0.09);
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.16, t + 0.008);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+        o.connect(g).connect(ac.destination); o.start(t); o.stop(t + 0.2);
+      });
+    } catch (e) {}
+  }
   function startAudio() {
-    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-    master = audioCtx.createGain(); master.gain.value = 0; master.connect(audioCtx.destination);
-    const len = audioCtx.sampleRate * 4;
-    const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
-    const d = buf.getChannelData(0);
-    let last = 0;
-    for (let i = 0; i < len; i++) { const w = Math.random()*2-1; last = (last + 0.02*w)/1.02; d[i] = last*3.2; }
-    const noise = audioCtx.createBufferSource(); noise.buffer = buf; noise.loop = true;
-    const lp = audioCtx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=620; lp.Q.value=0.6;
-    const ng = audioCtx.createGain(); ng.gain.value = 0.16;
+    const ac = ensureCtx();
+    master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
+    const len = ac.sampleRate * 4;
+    const buf = ac.createBuffer(1, len, ac.sampleRate);
+    const d = buf.getChannelData(0); let last = 0;
+    for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + 0.02 * w) / 1.02; d[i] = last * 3.2; }
+    const noise = ac.createBufferSource(); noise.buffer = buf; noise.loop = true;
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 620; lp.Q.value = 0.6;
+    const ng = ac.createGain(); ng.gain.value = 0.16;
     noise.connect(lp).connect(ng).connect(master); noise.start();
     [174.6, 261.6, 392.0].forEach((f, i) => {
-      const o = audioCtx.createOscillator(); o.type='sine'; o.frequency.value=f;
-      const g = audioCtx.createGain(); g.gain.value = 0.028/(i+1);
-      const lfo = audioCtx.createOscillator(); lfo.frequency.value = 0.05 + i*0.013;
-      const lg = audioCtx.createGain(); lg.gain.value = 0.02;
+      const o = ac.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+      const g = ac.createGain(); g.gain.value = 0.028 / (i + 1);
+      const lfo = ac.createOscillator(); lfo.frequency.value = 0.05 + i * 0.013;
+      const lg = ac.createGain(); lg.gain.value = 0.02;
       lfo.connect(lg).connect(g.gain); lfo.start();
       o.connect(g).connect(master); o.start();
     });
     setInterval(() => {
       if (!playing) return;
-      const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); const t = audioCtx.currentTime;
-      o.type='sine'; o.frequency.setValueAtTime(420+Math.random()*300, t);
-      o.frequency.exponentialRampToValueAtTime(900+Math.random()*400, t+0.12);
+      const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime;
+      o.type = 'sine'; o.frequency.setValueAtTime(420 + Math.random() * 300, t);
+      o.frequency.exponentialRampToValueAtTime(900 + Math.random() * 400, t + 0.12);
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.05, t+0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, t+0.35);
-      o.connect(g).connect(master); o.start(t); o.stop(t+0.4);
+      g.gain.exponentialRampToValueAtTime(0.05, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+      o.connect(g).connect(master); o.start(t); o.stop(t + 0.4);
     }, 2600);
-    master.gain.linearRampToValueAtTime(0.9, audioCtx.currentTime + 2.5);
+    master.gain.linearRampToValueAtTime(0.9, ac.currentTime + 2.5);
   }
-  function stopAudio() { if (audioCtx && master) master.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.8); }
   $('#sound').addEventListener('click', () => {
     playing = !playing;
     $('#sound').classList.toggle('off', !playing);
     $('#sound').textContent = playing ? '🔊' : '🔈';
-    if (playing) { if (!audioCtx) startAudio(); else audioCtx.resume().then(() => master.gain.linearRampToValueAtTime(0.9, audioCtx.currentTime + 1)); }
-    else stopAudio();
+    if (playing) { if (!master) startAudio(); else ensureCtx().resume().then(() => master.gain.linearRampToValueAtTime(0.9, audioCtx.currentTime + 1)); }
+    else if (master) master.gain.linearRampToValueAtTime(0, ensureCtx().currentTime + 0.8);
   });
   $('#sound').classList.add('off');
 
   placeHer(herPos.x, herPos.y);
-  setTimeout(wander, 2500);
+  setTimeout(wander, 2600);
 })();
 </script>
 </body>
