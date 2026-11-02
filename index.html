@@ -8,9 +8,9 @@
   :root { --ink:#17324f; --ink-soft:#41648a; --glass:rgba(255,255,255,.72); --line:rgba(80,130,190,.22); --accent:#2f7fd0; }
   * { box-sizing: border-box; }
   html, body { height:100%; margin:0; }
-  body { background:#0d1c30; font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); overflow:hidden; user-select:none; }
+  body { background:radial-gradient(circle at 50% 42%, #16324f 0%, #08131f 62%, #050b13 100%); font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); overflow:hidden; user-select:none; }
   #stage { position:fixed; inset:0; display:grid; place-items:center; }
-  #room { position:relative; width:min(100vw, calc(100vh*1.5)); height:min(66.6667vw,100vh); background:url("assets/room2.jpg") center/cover no-repeat; }
+  #room { position:relative; width:min(100vw, calc(100vh*1.5)); height:min(66.6667vw,100vh); background:url("assets/room3.jpg") center/cover no-repeat; }
   #tint { position:absolute; inset:0; pointer-events:none; transition:background .9s ease, opacity .9s ease; }
   #tint.morning  { background:linear-gradient(160deg, rgba(255,238,205,.34), rgba(255,255,255,0) 55%); }
   #tint.noon     { background:linear-gradient(160deg, rgba(255,255,240,.16), rgba(255,255,255,0) 60%); }
@@ -82,18 +82,18 @@
     <div id="sound" title="环境音">🔈</div>
 
     <div id="weather">
-      <span id="wcity">杭州</span>
+      <span id="wcity">星海</span>
       <b id="wtemp">--°</b>
       <span id="wtext">—</span>
     </div>
 
-    <div class="hotspot" style="left:36%; top:56%" data-key="bed"    data-label="床"></div>
-    <div class="hotspot" style="left:45%; top:37%" data-key="shelf"  data-label="书架"></div>
-    <div class="hotspot" style="left:17%; top:52%" data-key="lamp"   data-label="床头灯"></div>
+    <div class="hotspot" style="left:36%; top:57%" data-key="bed"    data-label="床"></div>
+    <div class="hotspot" style="left:46%; top:40%" data-key="shelf"  data-label="书架"></div>
+    <div class="hotspot" style="left:18%; top:55%" data-key="lamp"   data-label="床头灯"></div>
     <div class="hotspot" style="left:71%; top:53%" data-key="desk"   data-label="书桌"></div>
-    <div class="hotspot" style="left:72%; top:24%" data-key="window" data-label="窗户"></div>
-    <div class="hotspot" style="left:53%; top:74%" data-key="whale"  data-label="鲸鱼抱枕"></div>
-    <div class="hotspot" style="left:93%; top:33%" data-key="frames" data-label="墙上的画"></div>
+    <div class="hotspot" style="left:62%; top:26%" data-key="window" data-label="窗户"></div>
+    <div class="hotspot" style="left:52%; top:76%" data-key="whale"  data-label="鲸鱼抱枕"></div>
+    <div class="hotspot" style="left:28%; top:32%" data-key="frames" data-label="墙上的画"></div>
 
     <div id="panel">
       <span class="close">×</span>
@@ -192,7 +192,7 @@
     desk:   { t: '书桌', p: '屏幕亮着，键盘上有点灰。\n椅子被推得歪着，是刚起身的样子。' },
     window: { t: '窗户', p: '白纱帘，风一吹就鼓起来。\n外面是晴天，云低得像能伸手碰到。' },
     whale:  { t: '鲸鱼抱枕', p: '整间房最显眼的东西，趴在圆毯正中间。\n她累了就整个人陷进去，只露出一点头发。' },
-    frames: { t: '墙上的画', p: '两幅小的，一幅是海，一幅是鲸鱼。\n画得都不太像，但她没换掉。' }
+    frames: { t: '墙上的画', p: '床头那面墙挂着一幅小画，画的是海。\n画得不太像，但她没换掉。' }
   };
   function showPanel(key) {
     const c = CARDS[key]; if (!c) return;
