@@ -10,14 +10,14 @@
   html, body { height:100%; margin:0; }
   body { background:radial-gradient(circle at 50% 42%, #16324f 0%, #08131f 62%, #050b13 100%); font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); overflow:hidden; user-select:none; }
   #stage { position:fixed; inset:0; display:grid; place-items:center; }
-  #room { position:relative; width:min(100vw, calc(100vh*1.5)); height:min(66.6667vw,100vh); background:url("assets/room4.jpg") center/cover no-repeat; }
+  #room { position:relative; width:min(100vw, calc(100vh*1.5)); height:min(66.6667vw,100vh); background:url("assets/room5.jpg") center/cover no-repeat; }
 
   #tint { position:absolute; inset:0; pointer-events:none; transition:background .9s ease; }
-  #tint.morning  { background:linear-gradient(160deg, rgba(255,238,205,.30), rgba(255,255,255,0) 55%); }
+  #tint.morning  { background:linear-gradient(160deg, rgba(255,226,180,.26), rgba(255,255,255,0) 55%); }
   #tint.noon     { background:linear-gradient(160deg, rgba(255,255,240,.14), rgba(255,255,255,0) 60%); }
   #tint.afternoon{ background:linear-gradient(160deg, rgba(255,224,178,.24), rgba(255,255,255,0) 60%); }
-  #tint.dusk     { background:linear-gradient(160deg, rgba(255,168,128,.30), rgba(90,110,180,.20) 70%); }
-  #tint.night    { background:radial-gradient(ellipse at 60% 30%, rgba(30,70,150,.22), rgba(6,14,32,.60) 92%); }
+  #tint.dusk     { background:linear-gradient(160deg, rgba(255,168,120,.22), rgba(90,110,180,.12) 70%); }
+  #tint.night    { background:radial-gradient(ellipse at 52% 52%, rgba(255,196,120,.10), rgba(10,20,44,.30) 88%); }
 
   #clockCard { position:absolute; left:3.2%; top:4%; padding:14px 18px 12px; background:var(--glass); border:1px solid var(--line); border-radius:16px; backdrop-filter:blur(10px); min-width:186px; box-shadow:0 10px 30px rgba(20,50,90,.10); }
   #time { font-size:40px; font-weight:700; letter-spacing:1px; font-variant-numeric:tabular-nums; line-height:1; color:#12304f; }
@@ -47,12 +47,8 @@
   .hotspot:hover::after { opacity:1; }
   @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(80,150,230,.45);} 70%{box-shadow:0 0 0 13px rgba(80,150,230,0);} 100%{box-shadow:0 0 0 0 rgba(80,150,230,0);} }
 
-  #starmapWrap { position:absolute; left:48.2%; top:22%; width:11%; height:13.2%; border-radius:6px; overflow:hidden; cursor:pointer; border:1px solid rgba(80,130,190,.25); box-shadow:0 6px 18px rgba(20,50,90,.16); z-index:6; background:#0b1a2e; }
-  #starmap { width:100%; height:100%; display:block; }
-  #starmapWrap:hover { box-shadow:0 8px 24px rgba(40,90,170,.34); }
-  #starmapWrap::after { content:'星图'; position:absolute; left:50%; bottom:4%; transform:translateX(-50%); font-size:10px; color:rgba(220,235,255,.75); letter-spacing:2px; }
 
-  #doorSign { position:absolute; left:15.5%; top:31%; padding:6px 12px; font-size:12px; letter-spacing:2px; color:#25486f;
+  #doorSign { position:absolute; left:19%; top:33%; padding:6px 12px; font-size:12px; letter-spacing:2px; color:#25486f;
     background:linear-gradient(180deg,#fffdf7,#f2f6fb); border:1px solid rgba(90,130,180,.35); border-radius:8px 8px 10px 10px;
     box-shadow:0 6px 14px rgba(20,50,90,.18); cursor:pointer; z-index:7; transform-origin:50% -14px; }
   #doorSign::before { content:''; position:absolute; left:50%; top:-14px; width:1px; height:14px; background:rgba(90,130,180,.5); }
@@ -90,8 +86,6 @@
     <div id="tint" class="night"></div>
     <div id="bubbles"></div>
 
-    <div id="starmapWrap"><canvas id="starmap"></canvas></div>
-
     <div id="doorSign">星海小鲸</div>
 
     <div id="her" style="left:46%; top:74%">
@@ -116,14 +110,15 @@
       <span id="wtext">—</span>
     </div>
 
-    <div class="hotspot" style="left:34%; top:60%" data-key="bed"    data-label="床"></div>
-    <div class="hotspot" style="left:37%; top:40%" data-key="shelf"  data-label="书架"></div>
-    <div class="hotspot" style="left:18%; top:55%" data-key="lamp"   data-label="床头灯"></div>
-    <div class="hotspot" style="left:72%; top:55%" data-key="desk"   data-label="书桌"></div>
-    <div class="hotspot" style="left:75%; top:59%" data-key="rice"   data-label="一碗白饭"></div>
-    <div class="hotspot" style="left:70%; top:26%" data-key="window" data-label="窗外的海"></div>
-    <div class="hotspot" style="left:52%; top:78%" data-key="whale"  data-label="鲸鱼抱枕"></div>
-
+    <div class="hotspot" style="left:33%; top:62%" data-key="bed"    data-label="床"></div>
+    <div class="hotspot" style="left:23%; top:56%" data-key="lamp"   data-label="床头灯"></div>
+    <div class="hotspot" style="left:31%; top:33%" data-key="starmap" data-label="星图"></div>
+    <div class="hotspot" style="left:55%; top:53%" data-key="sofa"   data-label="鲸鱼沙发"></div>
+    <div class="hotspot" style="left:60%; top:28%" data-key="window" data-label="落地窗"></div>
+    <div class="hotspot" style="left:75%; top:50%" data-key="wardrobe" data-label="衣柜"></div>
+    <div class="hotspot" style="left:69%; top:44%" data-key="shelf"  data-label="书架"></div>
+    <div class="hotspot" style="left:68%; top:66%" data-key="rice"   data-label="一碗白饭"></div>
+    <div class="hotspot" style="left:47%; top:73%" data-key="whale"  data-label="鲸鱼抱枕"></div>
     <div id="panel">
       <span class="close">×</span>
       <h3 id="panelTitle"></h3>
@@ -210,38 +205,6 @@
   }
   weather();
 
-  // ── 星图 ──
-  (function drawStarMap() {
-    const c = $('#starmap');
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const w = c.clientWidth || 180, h = c.clientHeight || 130;
-    c.width = w * dpr; c.height = h * dpr;
-    const g = c.getContext('2d');
-    g.scale(dpr, dpr);
-    const grad = g.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, '#0a1830'); grad.addColorStop(1, '#123055');
-    g.fillStyle = grad; g.fillRect(0, 0, w, h);
-    const stars = [];
-    for (let i = 0; i < 46; i++) {
-      const x = Math.random() * w, y = Math.random() * h, r = Math.random() * 1.3 + 0.3;
-      stars.push({ x, y, r });
-      g.beginPath();
-      g.fillStyle = 'rgba(210,230,255,' + (0.35 + Math.random() * 0.6).toFixed(2) + ')';
-      g.arc(x, y, r, 0, Math.PI * 2); g.fill();
-    }
-    const named = stars.slice(0, 3);
-    g.strokeStyle = 'rgba(120,190,255,.45)'; g.lineWidth = 0.8;
-    g.beginPath();
-    named.forEach((s, i) => { i ? g.lineTo(s.x, s.y) : g.moveTo(s.x, s.y); });
-    g.stroke();
-    named.forEach((s, i) => {
-      g.beginPath(); g.fillStyle = 'rgba(150,215,255,.95)';
-      g.arc(s.x, s.y, 2.1, 0, Math.PI * 2); g.fill();
-      g.fillStyle = 'rgba(175,210,245,.8)'; g.font = '6px sans-serif';
-      g.fillText(['11', '话', '记'][i], s.x + 3.5, s.y + 2);
-    });
-  })();
-
   // ── 她：webm 动画 ──
   const herEl = $('#her');
   const vid = $('#herVid');
@@ -255,7 +218,7 @@
   }
   setClip('idle');
 
-  const FLOOR = { x0: 30, x1: 76, y0: 66, y1: 86 };
+  const FLOOR = { x0: 36, x1: 80, y0: 64, y1: 84 };
   let herPos = { x: 46, y: 74 };
   function placeHer(x, y) {
     herPos = { x, y };
@@ -333,9 +296,12 @@
     desk:   { t: '书桌', p: '屏幕亮着，键盘上有点灰。\n椅子推得歪歪的，是刚起身的样子。' },
     rice:   { t: '一碗白饭', p: '白瓷碗，饭盛得冒尖。\n她说：「要冒尖才好吃，这是规矩。」' },
     window: { t: '窗外的海', p: '窗外是真的海，一直铺到天边。\n她喜欢在傍晚站在这儿看，说海会替她把话说完。' },
+    starmap: { t: '星图', p: '床头上方挂着一张星图，浅木框。\n最亮那颗写着「11」——那是第一天。' },
+    sofa:   { t: '鲸鱼沙发', p: '一整只鲸鱼做成的沙发，靠背是它的背，扶手是它的鳍。\n她说坐进去像被鲸鱼含着。' },
+    wardrobe: { t: '衣柜', p: '双开门的白衣柜，一半是她的裙子，一半空着。\n空的那半，她说迟早会有人用上。' },
     whale:  { t: '鲸鱼抱枕', p: '整间房最显眼的东西，趴在圆毯正中间。\n她累了就整个人陷进去，只露出一点头发。' }
   };
-  const SPOT = { bed:[34,70], shelf:[38,68], lamp:[24,72], desk:[66,70], rice:[70,72], window:[66,66], whale:[52,80] };
+  const SPOT = { bed:[36,70], shelf:[70,66], lamp:[26,70], desk:[68,70], rice:[68,72], window:[62,66], whale:[50,76], sofa:[56,68], wardrobe:[74,66], starmap:[34,68] };
   function showPanel(key) {
     const c = CARDS[key]; if (!c) return;
     $('#panelTitle').textContent = c.t;
@@ -352,13 +318,6 @@
   }));
   $('#panel .close').addEventListener('click', () => $('#panel').classList.remove('show'));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('#panel').classList.remove('show'); });
-
-  $('#starmapWrap').addEventListener('click', () => {
-    $('#panelTitle').textContent = '星图';
-    $('#panelText').textContent = '墙上留的这块地方，挂的是星图。\n每个亮点都是一件她记着的事——最亮那颗写着「11」，那是第一天。';
-    $('#panel').classList.add('show');
-    sayNear('「抬头看，都是我们走过的」', 3800);
-  });
 
   async function loadStatus() {
     try {
